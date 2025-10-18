@@ -38,6 +38,8 @@ namespace NGDP {
     { "war3", "Warcraft III Old Ver (Partial)" },
     { "w3", "Warcraft III" },
     { "wow", "World of Warcraft Retail" },
+    { "wow_classic_era", "World of Warcraft Classic Era" },
+    { "wow_classic", "World of Warcraft Classic (currently MoP)" },
     { "wowt", "World of Warcraft Test" },
     { "wow_beta", "World of Warcraft Beta" },
   };
@@ -466,3 +468,4 @@ namespace NGDP {
   }
 
 }
+

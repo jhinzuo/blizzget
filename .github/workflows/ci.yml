@@ -1,8 +1,12 @@
+# CI: build blizztools and upload release binary (debug-friendly)
+# Place at .github/workflows/ci.yml
 on:
   push:
-    branches: [ main ]
+    # during debugging let it run on any branch; change to ['main'] for strictness later
+    branches: ["**"]
   pull_request:
-    branches: [ main ]
+    branches: ["**"]
+  workflow_dispatch: {}
 
 jobs:
   build:
@@ -14,19 +18,33 @@ jobs:
       - name: Install system deps
         run: |
           sudo apt-get update
-          sudo apt-get install -y pkg-config libssl-dev
+          sudo apt-get install -y pkg-config libssl-dev ca-certificates build-essential
 
-      - name: Setup Rust
+      - name: Setup Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
 
-      - name: Build (release)
-        run: cargo build --release
+      - name: Print environment (debug)
+        run: |
+          rustc --version || true
+          cargo --version || true
+          uname -a || true
+          echo "CWD: $(pwd)"
+          ls -la
 
-      - name: Upload release binary
+      - name: Build (release)
+        run: |
+          cargo build --verbose --release
+
+      - name: List built files (debug)
+        run: |
+          echo "Contents of target/release:"
+          ls -la target/release || true
+
+      - name: Upload release artifacts
         uses: actions/upload-artifact@v4
         with:
           name: blizztools-release
-          path: target/release/blizztools*
+          path: target/release/**
